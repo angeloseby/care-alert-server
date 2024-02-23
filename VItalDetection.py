@@ -1,8 +1,8 @@
 import random
 import time
+import asyncio
 
 from Server import sendVitals
-
 
 def generateAlert(alertType):
     print(f"Alert: {alertType}")
@@ -16,7 +16,6 @@ def generate_heart_rate():
         elif temp > 100:
             generateAlert("Heart Rate high")
         yield temp
-        time.sleep(1)
 
 def generate_respiration_rate():
     while True:
@@ -26,7 +25,6 @@ def generate_respiration_rate():
         elif temp > 20:
             generateAlert("Respiration Rate high")
         yield temp
-        time.sleep(1)
 
 def generate_temperature():
     while True:
@@ -36,7 +34,6 @@ def generate_temperature():
         elif temp > 37.5:
             generateAlert("Temperature high")
         yield temp
-        time.sleep(1)
 
 
 def generate_spO2():
@@ -45,7 +42,6 @@ def generate_spO2():
         if temp < 95:
             generateAlert("SpO2 low")
         yield temp 
-        time.sleep(1)
 
 
 
@@ -54,10 +50,6 @@ respiration_rate_stream = generate_respiration_rate()
 temperature_stream = generate_temperature()
 spO2_stream = generate_spO2()
 
-while True:
-    print(f"Heart Rate: {next(heart_rate_stream)}")
-    print(f"Respiration Rate: {next(respiration_rate_stream)}")
-    print(f"Temperature: {next(temperature_stream)}")
-    print(f"SpO2: {next(spO2_stream)}")
-    print()
-    time.sleep(1)
+def startSendingVitals(pCode):
+    sendVitals(pCode,next(heart_rate_stream),next(spO2_stream),next(respiration_rate_stream),next(temperature_stream))
+

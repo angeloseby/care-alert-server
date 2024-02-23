@@ -1,6 +1,6 @@
 import cv2
-
-from Server import sendAlert
+from Server import sendAlert, setAlert, setVitals
+from VItalDetection import startSendingVitals
 
 cap = cv2.VideoCapture(0)
 
@@ -8,7 +8,25 @@ detectedMotionFor = 0;
 
 mog = cv2.createBackgroundSubtractorMOG2()
 
+pCode = input("Enter the patient code : ")
+
+i=0
+
+setAlert(pCode)
+setVitals(pCode)
+
 while True:
+
+    
+
+    if(i==60):
+        startSendingVitals(pCode)
+        i = 0
+    i+=1
+    
+
+
+    
     ret, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     
@@ -31,7 +49,7 @@ while True:
 
         if detectedMotionFor > 200:
             print('Irregular Motion Detected')
-            sendAlert('pp1')
+            sendAlert(pCode)
             detectedMotionFor = 0
 
 
